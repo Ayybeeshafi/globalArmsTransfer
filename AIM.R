@@ -1,7 +1,16 @@
+
+#Let's begin by installing and loading the necessary packages.
+
+# if(!require('pacman')) install.packages('pacman')
+# pacman::p_load(tidyverse, ggpol, gganimate, gifski, kableExtra)
+
+
 library(tidyverse)
 library(ggpol)
 library(gganimate)
 library(gifski)
+
+#Data Input and Transformation
 
 IEpop <- read.csv("~/armsimportExportcsvS.csv")
 IEPop <- IEpop %>% 
@@ -13,7 +22,9 @@ IEPop <- IEpop %>%
   mutate(Year = as.integer(substr(Year, 2, 5)),
     Sales = ifelse(ImportorExport == 'Import', as.integer(Sales * -1), as.integer(Sales)))
 
-PopPyramid <- IEPop %>%
+#Static Plot
+
+IEPop <- IEPop %>%
   ggplot(aes(
     x = Country,
     y = Sales,
@@ -26,8 +37,7 @@ PopPyramid <- IEPop %>%
   scale_y_continuous(
     breaks = c(-1000,-2000,-4000,-6000,-8000,-10000, 0,1000,2000,4000,6000,8000,10000),
     label = c("1B","2B","4B","6B","8B","10B","0","1B","2B","4B","6B","8B","10B")
-  )
-PopPyramid <- PopPyramid +
+  ) +
   theme(
     legend.position = c(0.8,0.5),
     plot.background = element_rect(fill = "#eeebea"),
@@ -69,15 +79,18 @@ PopPyramid <- PopPyramid +
       face = 'italic',
       color = 'gray'
     )
-  )
-PopPyramid <- PopPyramid + 
+  ) 
+ IEPop <- IEPop +
+# Theme setting of the plot
   labs(
     title = 'International Flow of Major Conventional Arms\n',
     subtitle = '{closest_state}',
     y = '\n\nUS dollars (in Billions)',
     caption = '@Ayybeeshafi | Data Source: https://sipri.org/databases/armstransfers'
   )
-PopPyramid <- PopPyramid + 
+
+ IEPop <- IEPop +
+  
   transition_states(
     Year,
     transition_length = 1,
@@ -87,13 +100,16 @@ PopPyramid <- PopPyramid +
   enter_fade() +
   exit_fade() + 
   ease_aes('cubic-in-out')
+
+
 animate(
-  PopPyramid,
+  IEPop,
   fps = 25,
   duration = 20,
   width = 1000,
   height = 900,
   res = 120,
   end_pause = 80,
+  
   renderer = gifski_renderer('ArmsImportExport.gif')
 )

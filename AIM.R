@@ -38,6 +38,7 @@ IEPop <- IEPop %>%
     breaks = c(-1000,-2000,-4000,-6000,-8000,-10000, 0,1000,2000,4000,6000,8000,10000),
     label = c("1B","2B","4B","6B","8B","10B","0","1B","2B","4B","6B","8B","10B")
   ) +
+  #Theme setting of the visualization
   theme(
     legend.position = c(0.8,0.5),
     plot.background = element_rect(fill = "#eeebea"),
@@ -81,7 +82,7 @@ IEPop <- IEPop %>%
     )
   ) 
  IEPop <- IEPop +
-# Theme setting of the plot
+#Labels and Axis text
   labs(
     title = 'International Flow of Major Conventional Arms\n',
     subtitle = '{closest_state}',
@@ -90,7 +91,9 @@ IEPop <- IEPop %>%
   )
 
  IEPop <- IEPop +
-  
+
+#Transition of Data in the subsequent frames  
+
   transition_states(
     Year,
     transition_length = 1,
@@ -100,7 +103,8 @@ IEPop <- IEPop %>%
   enter_fade() +
   exit_fade() + 
   ease_aes('cubic-in-out')
-
+ 
+#Creations of Gif
 
 animate(
   IEPop,
